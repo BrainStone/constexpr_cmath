@@ -14,7 +14,33 @@ namespace constexpr_cmath {
         float_t PI{3.14159265358979323846264338327};
         float_t TWO_PI{PI<T> * 2.0};
         float_t HALF_PI{PI<T> / 2.0};
-        constexpr count_t sin_iterations{10};
+
+        template<std::floating_point T>
+        constexpr count_t calc_sin_iterations() {
+            constexpr T x2{HALF_PI<T> * HALF_PI<T>};
+            T divisor_inverted{1.0};
+            T pow_x{HALF_PI<T>};
+            T last_out;
+            T out{HALF_PI<T>};
+
+            for (count_t i = 1;; ++i) {
+                last_out = out;
+
+                pow_x *= x2;
+                divisor_inverted /= (2 * i) * (2 * i + 1);
+
+                if ((i & 1) == 0)
+                    out += pow_x * divisor_inverted;
+                else
+                    out -= pow_x * divisor_inverted;
+
+                if (last_out == out) return i;
+            }
+        }
+
+        // TODO: doesn't seem right yet, as manually increasing this value improves the calculation
+        template<std::floating_point T>
+        constexpr count_t sin_iterations{calc_sin_iterations<T>()};
 
         float_t sin_half_arc(const T x) {
             const T x2{x * x};
@@ -22,7 +48,7 @@ namespace constexpr_cmath {
             T pow_x{x};
             T out{x};
 
-            for (count_t i = 1; i < sin_iterations; ++i) {
+            for (count_t i = 1; i < sin_iterations<T>; ++i) {
                 pow_x *= x2;
                 divisor_inverted /= (2 * i) * (2 * i + 1);
 
