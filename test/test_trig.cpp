@@ -11,7 +11,7 @@ TEST(TrigonometryTest, Sin) {
     long double abs_diff;
     long double max_abs_diff = 0.0L;
     long double max_diff;
-    long double value;
+    long double param;
 
     for (long double x = -10.0L; x < 10.0L; x += 1e-6L) {
         diff = std::sin(x) - constexpr_cmath::sin(x);
@@ -20,12 +20,22 @@ TEST(TrigonometryTest, Sin) {
         if (abs_diff > max_abs_diff) {
             max_abs_diff = abs_diff;
             max_diff = diff;
-            value = x;
+            param = x;
         }
     }
 
     std::cout.precision(std::numeric_limits<long double>::max_digits10 + 2);
-    std::cout << "max diff " << max_diff << " at " << value << std::endl;
+    std::cout << "sin max diff " << max_diff << " at " << param << std::endl;
+
+    const long double std_val{std::sin(param)};
+    long double constexpr_cmath_val{constexpr_cmath::sin(param)};
+    size_t steps_off = 0;
+
+    for (; constexpr_cmath_val != std_val; ++steps_off) {
+        constexpr_cmath_val = std::nexttoward(constexpr_cmath_val, std_val);
+    }
+
+    EXPECT_LT(steps_off, 10);
 }
 
 TEST(TrigonometryTest, Cos) {
@@ -33,7 +43,7 @@ TEST(TrigonometryTest, Cos) {
     long double abs_diff;
     long double max_abs_diff = 0.0L;
     long double max_diff;
-    long double value;
+    long double param;
 
     for (long double x = -10.0L; x < 10.0L; x += 1e-6L) {
         diff = std::cos(x) - constexpr_cmath::cos(x);
@@ -42,10 +52,20 @@ TEST(TrigonometryTest, Cos) {
         if (abs_diff > max_abs_diff) {
             max_abs_diff = abs_diff;
             max_diff = diff;
-            value = x;
+            param = x;
         }
     }
 
     std::cout.precision(std::numeric_limits<long double>::max_digits10 + 2);
-    std::cout << "max diff " << max_diff << " at " << value << std::endl;
+    std::cout << "cos max diff " << max_diff << " at " << param << std::endl;
+
+    const long double std_val{std::cos(param)};
+    long double constexpr_cmath_val{constexpr_cmath::cos(param)};
+    size_t steps_off = 0;
+
+    for (; constexpr_cmath_val != std_val; ++steps_off) {
+        constexpr_cmath_val = std::nexttoward(constexpr_cmath_val, std_val);
+    }
+
+    EXPECT_LT(steps_off, 10);
 }
