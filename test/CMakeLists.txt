@@ -33,3 +33,5 @@ add_test(${PROJECT_NAME} ${PROJECT_NAME})
 add_executable(${PROJECT_NAME} test_trig.cpp)
 # Link test executable against gtest & gtest_main
 target_link_libraries(${PROJECT_NAME} PRIVATE gtest gtest_main constexpr_cmath)
+
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math")
