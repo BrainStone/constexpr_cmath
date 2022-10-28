@@ -7,20 +7,45 @@
 #include "constrexpr_cmath.hpp"
 
 TEST(TrigonometryTest, Sin) {
-    const long double delta = std::abs(1 - std::sin(constexpr_cmath::internal::HALF_PI<long double>));
-    constexpr long double value = constexpr_cmath::sin(1.0L);
+    long double diff;
+    long double abs_diff;
+    long double max_abs_diff = 0.0L;
+    long double max_diff;
+    long double value;
+
+    for (long double x = -10.0L; x < 10.0L; x += 1e-6L) {
+        diff = std::sin(x) - constexpr_cmath::sin(x);
+        abs_diff = std::abs(diff);
+
+        if (abs_diff > max_abs_diff) {
+            max_abs_diff = abs_diff;
+            max_diff = diff;
+            value = x;
+        }
+    }
 
     std::cout.precision(std::numeric_limits<long double>::max_digits10 + 2);
-    std::cout << delta << std::endl;
+    std::cout << "max diff " << max_diff << " at " << value << std::endl;
+}
 
-    std::cout << constexpr_cmath::sin(1.0L) - std::sin(1.0L) << std::endl;
-    std::cout << constexpr_cmath::sin(1.0L) - 0.8414709848078965066525023216302989996225630607983710656727517099L
-              << std::endl;
+TEST(TrigonometryTest, Cos) {
+    long double diff;
+    long double abs_diff;
+    long double max_abs_diff = 0.0L;
+    long double max_diff;
+    long double value;
 
-    std::cout << std::sin(1.0L) << std::endl;
-    std::cout << constexpr_cmath::sin(1.0L) << std::endl;
-    std::cout << 0.8414709848078965066525023216302989996225630607983710656727517099L << std::endl;
+    for (long double x = -10.0L; x < 10.0L; x += 1e-6L) {
+        diff = std::cos(x) - constexpr_cmath::cos(x);
+        abs_diff = std::abs(diff);
 
-    EXPECT_NEAR(constexpr_cmath::sin(1.0L), std::sin(1.0L), delta);
-    EXPECT_NEAR(constexpr_cmath::sin(1.0L), 0.8414709848078965066525023216302989996225630607983710656727517099L, delta);
+        if (abs_diff > max_abs_diff) {
+            max_abs_diff = abs_diff;
+            max_diff = diff;
+            value = x;
+        }
+    }
+
+    std::cout.precision(std::numeric_limits<long double>::max_digits10 + 2);
+    std::cout << "max diff " << max_diff << " at " << value << std::endl;
 }

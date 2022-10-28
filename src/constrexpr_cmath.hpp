@@ -14,7 +14,7 @@ namespace constexpr_cmath {
         float_t PI{3.14159265358979323846264338327};
         float_t TWO_PI{PI<T> * 2.0};
         float_t HALF_PI{PI<T> / 2.0};
-        constexpr count_t sin_iterations{30};
+        constexpr count_t sin_iterations{10};
 
         float_t sin_half_arc(const T x) {
             const T x2{x * x};
